@@ -12,46 +12,46 @@
 <script type="text/javascript" src="js/jquery-1.7.2.min.js"></script>
 <script type="text/javascript">
 	$(function(){
-		//读取一级分类js数据
-		$.getJSON("js/json/class_1.js",function(data){
+		//一级分类数据加载
+		$.getJSON("js/json/class_1.js", function(data){
 			$("#spu_publish_class_1_select").append("<option>请选择</option>");
 			$("#spu_publish_class_2_select").append("<option>请选择</option>");
 			$("#spu_publish_tm_select").append("<option>请选择</option>");
-			$(data).each(function(i,json){
-				$("#spu_publish_class_1_select").append("<option value="+json.id+">"+json.flmch1+"</option>");
+			$.each(data, function(i, json){
+				$("#spu_publish_class_1_select").append("<option value=" + json.id + ">" + json.flmch1 + "</option>");
 			});
 		});
-		
-		//加载到一级分类的下拉列表中
 	});
 	
-	function spu_publish_select_class_2_by_class_1_id(class_1_id){
-		// 获得被选中的一级分类id
-		// var class_1_id = $("#spu_publish_class_1_select option:selected").val();
-		
-		// 根据一级分类id加载二级分类和商品信息
-		$.getJSON("js/json/class_2_"+class_1_id+".js",function(data){
+	//二级分类数据加载
+	function spu_publish_select_class_2_by_class_1_id(class_1_id) {
+		$.getJSON("js/json/class_2_" + class_1_id +".js", function(data){
 			$("#spu_publish_class_2_select").empty();
-			$("#spu_publish_class_2_select").append("<option>请选择</option>")
-			$(data).each(function(i,json){
-				$("#spu_publish_class_2_select").append("<option value="+json.id+">"+json.flmch2+"</option>");
+			$("#spu_publish_class_2_select").append("<option>请选择</option>");
+			$.each(data, function(i, json){
+				$("#spu_publish_class_2_select").append("<option value=" + json.id + ">" + json.flmch2 + "</option>");
 			});
 		});
 		
+		//商标
 		$.getJSON("js/json/trade_mark_"+class_1_id+".js",function(data){
 			$("#spu_publish_tm_select").empty();
-			$("#spu_publish_tm_select").append("<option>请选择</option>")
+			$("#spu_publish_tm_select").append("<option>请选择</option>");
 			$(data).each(function(i,json){
 				$("#spu_publish_tm_select").append("<option value="+json.id+">"+json.ppmch+"</option>");
 			});
 		});
-	}
+		
+	};
+		
+		
 </script>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>new jsp</title>
 </head>
 <body>
 	<form action="spu_publish.do" method="post"  enctype="multipart/form-data">
+		<!-- 选择了一级分类后就自动加载二级分类的选项 -->
 		<select name="flbh1" id="spu_publish_class_1_select" onChange="spu_publish_select_class_2_by_class_1_id(this.value)">
 		</select>
 		<br>

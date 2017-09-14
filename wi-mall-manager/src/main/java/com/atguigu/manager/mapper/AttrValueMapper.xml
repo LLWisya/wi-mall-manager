@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "http://mybatis.org/dtd/mybatis-3-mapper.dtd" "mybatis-3-mapper.dtd" >
+<mapper namespace="com.atguigu.manager.mapper.AttrValueMapper">
+
+	<resultMap type="com.atguigu.manager.bean.OBJECT_T_MALL_ATTR" id="select_attr_by_class_2_id_map" autoMapping="true">
+		<!-- 指定类中的id是哪个列 -->
+		<result column="attr_id" property="id"/>
+		<!-- 内嵌关联的类的集合使用collection封装 -->
+		<collection ofType="com.atguigu.manager.bean.T_MALL_VALUE" property="list_value" autoMapping="true">
+			<result column="value_id" property="id"/>
+		</collection>
+	</resultMap>
+
+	<!-- 简单结果集使用resultType, 联合查询及复合结果集使用resultMap -->
+	<select id="select_attr_by_class_2_id" parameterType="int" resultMap="select_attr_by_class_2_id_map">
+		<!-- 两个表中都有id这个字段，建议使用别名区分，否则自动命名为id1,id2不好区别 -->
+		select a.id as attr_id, b.id as value_id, a.*, b.*
+		from
+		t_mall_attr a, t_mall_value b
+		where a.id = b.shxm_id and a.flbh2 =
+		#{class_2_id}
+
+	</select>
+
+	<!-- useGeneratedKeys自增，  keyColumn列的id，keyProperty对应模型类中的id -->
+	<insert useGeneratedKeys="true" keyColumn="id" keyProperty="id"
+		id="insert_into_t_mall_attr">
+		insert into
+		t_mall_attr(shxm_mch,flbh2)
+		values(#{shxm_mch},#{flbh2})
+	</insert>
+	
+	<insert id="insert_into_t_mall_value"  parameterType="Map">
+		insert into
+		t_mall_value(`shxzh`, `shxzh_mch`, shxm_id)
+		values
+		<foreach collection="list_value" item="val" separator=",">
+			(#{val.shxzh}, #{val.shxzh_mch}, #{attr_id})
+		</foreach>	
+	</insert>
+	
+</mapper>
